@@ -1,0 +1,21 @@
+{
+  "name": "Cosmic Card",
+  "short_name": "CosmicCard",
+  "description": "A message from the universe. Daily spiritual reflection.",
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "#050117",
+  "theme_color": "#050117",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
