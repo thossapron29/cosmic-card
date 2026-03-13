@@ -28,13 +28,12 @@ export default function HistoryDetailPage() {
 
     async function fetchDetail() {
       try {
-        // We can just fetch the history and find this one, or hit a specific detail point. 
-        // For simplicity, fetch history and filter.
+        // Fetch history and find by card.id
         const res = await fetch(`/api/history?userId=${userId}`);
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
         
-        const found = data.history?.find((h: any) => h.id === id);
+        const found = data.history?.find((h: any) => h.card?.id === id);
         if (found) {
           setRecord(found);
         } else {
@@ -88,7 +87,7 @@ export default function HistoryDetailPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col items-center flex-grow justify-center"
+            className="flex flex-col items-center grow justify-center"
           >
             <CardContent card={record.card} />
 

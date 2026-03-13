@@ -4,13 +4,13 @@ interface ShareCardViewProps {
   card: Card;
   /**
    * We use a fixed width/height for consistent image generation
-   * e.g., 1080x1920 scaled down visually via CSS transform if needed.
+   * e.g., 600x1067 scaled down visually via CSS transform if needed.
    */
   width?: number;
   height?: number;
 }
 
-export function ShareCardView({ card, width = 1080, height = 1920 }: ShareCardViewProps) {
+export function ShareCardView({ card, width = 600, height = 1067 }: ShareCardViewProps) {
   return (
     <div
       id="share-card-container"
@@ -23,35 +23,35 @@ export function ShareCardView({ card, width = 1080, height = 1920 }: ShareCardVi
     >
       {/* Decorative stars / dust could go here */}
 
-      <div className="absolute top-24">
-        <h1 className="text-4xl tracking-[0.4em] text-white/40 uppercase font-light">Cosmic Card</h1>
+      <div className="absolute top-8">
+        <h1 className="text-base tracking-[0.4em] text-white/40 uppercase font-light">Cosmic Card</h1>
       </div>
 
-      <div className="flex flex-col items-center justify-center space-y-16 p-24 max-w-3xl">
+      <div className="flex flex-col items-center justify-center space-y-4 px-8 max-w-xl">
         <div>
-          <p className="text-cosmic-accent text-2xl tracking-[0.3em] uppercase mb-6">Message</p>
-          <h2 className="text-8xl font-light tracking-widest text-white mb-12">{card.title}</h2>
-          <div className="w-24 h-[2px] bg-white/30 mx-auto" />
+          <p className="text-cosmic-accent text-xs tracking-[0.3em] uppercase mb-1.5">Message</p>
+          <h2 className="text-3xl font-light tracking-widest text-white mb-3">{card.title}</h2>
+          <div className="w-10 h-[1.5px] bg-white/30 mx-auto" />
         </div>
 
-        <p className="text-5xl leading-relaxed text-white/90 font-light italic">
+        <p className="text-lg leading-relaxed text-white/90 font-light italic px-4">
           &quot;{card.message}&quot;
         </p>
 
-        <div className="pt-12 space-y-12">
+        <div className="pt-2 space-y-4">
           <div>
-            <h3 className="text-xl text-white/50 uppercase tracking-[0.2em] mb-4">Affirmation</h3>
-            <p className="text-3xl font-medium text-cosmic-accent">{card.affirmation}</p>
+            <h3 className="text-xs text-white/50 uppercase tracking-[0.2em] mb-1.5">Affirmation</h3>
+            <p className="text-base font-medium text-cosmic-accent px-4">{card.affirmation}</p>
           </div>
           
           <div>
-            <h3 className="text-xl text-white/50 uppercase tracking-[0.2em] mb-4">Reflection</h3>
-            <p className="text-2xl text-white/80">{card.reflection}</p>
+            <h3 className="text-xs text-white/50 uppercase tracking-[0.2em] mb-1.5">Reflection</h3>
+            <p className="text-sm text-white/80 px-4">{card.reflection}</p>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-24 text-white/30 text-2xl tracking-widest font-light">
+      <div className="absolute bottom-6 text-white/30 text-xs tracking-widest font-light">
         Shared via Cosmic Card
       </div>
     </div>

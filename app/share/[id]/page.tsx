@@ -40,7 +40,7 @@ export default function SharePage() {
     try {
       const blob = await toBlob(shareRef.current, {
         cacheBust: true,
-        pixelRatio: 1,
+        pixelRatio: 2,
       });
       if (!blob) throw new Error("Could not generate image");
 
@@ -81,7 +81,7 @@ export default function SharePage() {
     try {
       const blob =
         existingBlob ||
-        (await toBlob(shareRef.current, { cacheBust: true, pixelRatio: 1 }));
+        (await toBlob(shareRef.current, { cacheBust: true, pixelRatio: 2 }));
       if (!blob) throw new Error("Could not generate image");
 
       const url = URL.createObjectURL(blob);
@@ -102,15 +102,15 @@ export default function SharePage() {
 
   return (
     <ScreenShell>
-      <div className="flex flex-col w-full z-10 h-full overflow-hidden pb-12">
-        <div className="flex items-center mb-8 sticky top-0 z-20">
+      <div className="flex flex-col w-full z-10 h-full overflow-hidden">
+        <div className="flex items-center mb-4 sticky top-0 z-20">
           <button
             onClick={() => router.back()}
             className="p-2 -ml-2 text-white/60 hover:text-white transition-colors"
           >
-            <ArrowLeft className="w-6 h-6" />
+            <ArrowLeft className="w-5 h-5" />
           </button>
-          <h1 className="text-xl font-light tracking-[0.2em] uppercase ml-2 text-white/90">
+          <h1 className="text-lg font-light tracking-[0.2em] uppercase ml-2 text-white/90">
             Share
           </h1>
         </div>
@@ -124,18 +124,30 @@ export default function SharePage() {
             {error ? (error as Error).message : "Card not found in your journey"}
           </p>
         ) : (
-          <div className="flex flex-col items-center w-full">
-            <div className="relative w-[300px] h-[533px] shrink-0 bg-white/5 rounded-2xl overflow-hidden shadow-2xl  border border-white/10 mb-8 pointer-events-none">
-              <div
-                className="absolute top-0 left-0 origin-top-left"
-                style={{ transform: `scale(${300 / 1080})` }}
-                ref={shareRef}
-              >
-                <ShareCardView card={card} />
+          <div className="flex flex-col items-center w-full flex-1 justify-between">
+            {/* Preview container */}
+            <div className="relative w-full max-w-[280px] mx-auto shrink-0 bg-white/5 rounded-xl overflow-hidden shadow-2xl border border-white/10">
+              <div className="w-full" style={{ aspectRatio: '9/16', position: 'relative', overflow: 'hidden' }}>
+                <div 
+                  style={{ 
+                    width: '600px',
+                    height: '1067px',
+                    transform: `scale(${280 / 600})`,
+                    transformOrigin: 'top center',
+                    position: 'absolute',
+                    top: 0,
+                    left: '50%',
+                    marginLeft: '-300px'
+                  }}
+                >
+                  <div ref={shareRef}>
+                    <ShareCardView card={card} width={600} height={1067} />
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="flex space-x-4 w-full max-w-[300px]">
+            <div className="flex space-x-4 w-full max-w-[280px] pt-4">
               <PrimaryButton
                 onClick={handleShare}
                 className="flex-1 flex justify-center items-center gap-2 border-none"

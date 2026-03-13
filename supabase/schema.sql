@@ -14,13 +14,13 @@ create table cards (
 );
 
 -- Table: user_cards
+-- Updated: Removed unique constraint to allow unlimited reveals per day
 create table user_cards (
   id uuid primary key default uuid_generate_v4(),
   user_id text not null,
   card_id uuid references cards(id) not null,
   revealed_date date not null,
-  created_at timestamp with time zone default now(),
-  constraint unique_user_reveal unique(user_id, revealed_date)
+  created_at timestamp with time zone default now()
 );
 
 -- Seed Initial Cards

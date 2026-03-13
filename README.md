@@ -4,10 +4,10 @@ A spiritual manifestation web app where users reveal one card message from the u
 
 ## Features
 
-- **Daily Reveal**: Reveal one curated spiritual message every 24 hours.
+- **Unlimited Reveals**: Reveal as many cosmic messages as you want, anytime.
 - **PWA Ready**: Installable on iPhone and Android with a native app-like experience.
 - **Fullscreen Mode**: Immersive standalone display.
-- **Performance Optimized**: Instant loading using LocalStorage and TanStack Query caching.
+- **Performance Optimized**: Smooth animations with Framer Motion.
 - **Instagram Sharing**: Export beautiful 9:16 card images directly to Instagram Stories.
 - **Journey History**: View all your past revealed cards in a beautiful timeline.
 
@@ -24,7 +24,9 @@ A spiritual manifestation web app where users reveal one card message from the u
 
 1. **Clone the repository**
 2. **Install dependencies**: `npm install`
-3. **Setup Supabase**: Run the SQL in `supabase/schema.sql` in your Supabase project.
+3. **Setup Supabase**: 
+   - Run the SQL in `supabase/schema.sql` in your Supabase project.
+   - **For unlimited reveals**: Run `supabase/migration_unlimited_reveals.sql` to remove the daily limit constraint.
 4. **Environment Variables**: Add your Supabase credentials to `.env.local`.
    ```env
    NEXT_PUBLIC_SUPABASE_URL=your_url

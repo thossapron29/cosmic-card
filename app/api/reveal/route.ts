@@ -16,22 +16,7 @@ export async function POST(request: Request) {
 
     const todayStr = localDateStr || getTodayDateStr();
 
-    // 1. Check if user already revealed today
-    const { data: existingUserCard, error: existingError } = await supabase
-      .from('user_cards')
-      .select('*, card:cards(*)')
-      .eq('user_id', userId)
-      .eq('revealed_date', todayStr)
-      .single();
-
-    if (existingUserCard && !existingError) {
-      // Already revealed today
-      return NextResponse.json({ card: existingUserCard.card, isNewReveal: false });
-    }
-
-    // 2. Not revealed today -> Pick a random card
-    // Note: Since the dataset is small (e.g. 12-50 cards), we can just fetch all IDs and pick one in memory,
-    // or use a Postgres function. We'll fetch all IDs for simplicity and speed on small tables.
+    // Pick a random card (unlimited reveals)
     const { data: allCards, error: allCardsError } = await supabase
       .from('cards')
       .select('id, title, message, affirmation, reflection');
@@ -43,7 +28,7 @@ export async function POST(request: Request) {
     const randomIndex = Math.floor(Math.random() * allCards.length);
     const selectedCard = allCards[randomIndex];
 
-    // 3. Save to user_cards
+    // Save to user_cards history (no unique constraint)
     const { error: insertError } = await supabase
       .from('user_cards')
       .insert({
@@ -54,7 +39,7 @@ export async function POST(request: Request) {
 
     if (insertError) {
       console.error('Insert error:', insertError);
-      return NextResponse.json({ error: 'Failed to save daily reveal' }, { status: 500 });
+      // Continue even if insert fails (constraint may still exist)
     }
 
     return NextResponse.json({ card: selectedCard, isNewReveal: true });

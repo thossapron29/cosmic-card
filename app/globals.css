@@ -31,7 +31,17 @@ body {
   background-color: var(--color-cosmic-bg);
   color: var(--color-cosmic-text);
   overflow: hidden;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   width: 100vw;
   position: fixed;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
