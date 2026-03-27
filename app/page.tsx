@@ -1,52 +1,41 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { History, UserRound } from "lucide-react";
 import { ScreenShell } from "@/components/screen-shell";
 import { GlowingCardBack } from "@/components/glowing-card-back";
 import { CardContent } from "@/components/card-content";
 import { PrimaryButton } from "@/components/primary-button";
-import { getAnonymousId, getTodayDateStr, getCachedTodayCard, setCachedTodayCard } from "@/lib/utils";
+import { getAnonymousId, getTodayDateStr } from "@/lib/utils";
 import { Card } from "@/types/card";
+import { RevealResponse } from "@/types/user-card";
+import { useViewer } from "@/providers/viewer-provider";
+
+const DEFAULT_DECK_SLUG = "cosmic-core";
 
 export default function Home() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const userId = useMemo(() => getAnonymousId(), []);
+  const { anonymousId } = useViewer();
+  const userId = useMemo(() => anonymousId ?? getAnonymousId(), [anonymousId]);
 
-  // State 0: Initial/Checking, 1: Revealing Animation, 2: Revealed
   const [revealState, setRevealState] = useState<0 | 1 | 2>(0);
   const [card, setCard] = useState<Card | null>(null);
-  const [isNewReveal, setIsNewReveal] = useState(false);
+  const [userCardId, setUserCardId] = useState<string | null>(null);
 
-  // 1. Zero-Load Check: Disabled for unlimited reveals
-  // Users can reveal multiple cards per day
-  useEffect(() => {
-    // Clear cache to allow fresh reveals
-    localStorage.removeItem('cosmic-card-today');
-  }, []);
-
-  // 2. Query History is optional now (no day limit)
-  const { isPending: loadingHistory } = useQuery({
-    queryKey: ["history", userId],
-    queryFn: async () => {
-      if (!userId) return { history: [] };
-      const res = await fetch(`/api/history?userId=${userId}`);
-      if (!res.ok) throw new Error("Failed to fetch history");
-      return res.json();
-    },
-    enabled: false, // Disable auto-fetch, user can view history separately
-  } as any);
-
-  // 3. Reveal Mutation
   const revealMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (): Promise<RevealResponse> => {
       const res = await fetch("/api/reveal", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, localDateStr: getTodayDateStr() }),
+        body: JSON.stringify({
+          userId,
+          localDate: getTodayDateStr(),
+          deckSlug: DEFAULT_DECK_SLUG,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to reveal card");
@@ -54,20 +43,17 @@ export default function Home() {
     },
     onSuccess: (data) => {
       setCard(data.card);
-      setIsNewReveal(true);
-      // Don't cache for unlimited reveals
-      
-      // Update history cache
+      setUserCardId(data.user_card_id);
       queryClient.invalidateQueries({ queryKey: ["history", userId] });
 
       setTimeout(() => {
         setRevealState(2);
       }, 1500);
     },
-    onError: (err: any) => {
+    onError: (err: Error) => {
       setRevealState(0);
       alert(err.message);
-    }
+    },
   });
 
   function handleReveal() {
@@ -76,12 +62,11 @@ export default function Home() {
     revealMutation.mutate();
   }
 
-  // Final check for loading state
-  const isCheckingData = false; // No pre-loading needed for unlimited reveals
+  const isCheckingData = false;
 
   if (isCheckingData) {
     return (
-      <ScreenShell className="items-center justify-center">
+      <ScreenShell scrollMode="locked" className="items-center justify-center">
         <div className="flex flex-col items-center space-y-8">
           {/* Modern minimal spinner */}
           <div className="relative w-16 h-16">
@@ -114,7 +99,10 @@ export default function Home() {
   }
 
   return (
-    <ScreenShell className="items-center justify-center">
+    <ScreenShell
+      scrollMode="locked"
+      className="mx-auto max-w-[26rem] justify-center"
+    >
       <AnimatePresence mode="wait">
         {revealState === 0 && (
           <motion.div
@@ -123,17 +111,43 @@ export default function Home() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
             transition={{ duration: 1 }}
-            className="flex flex-col items-center space-y-12"
+            className="flex h-full w-full flex-col items-center justify-center"
           >
-            <div className="text-center space-y-4">
-              <h1 className="text-3xl font-light tracking-[0.2em] uppercase text-white/90">Cosmic Card</h1>
-              <p className="text-cosmic-muted tracking-widest text-sm uppercase">A message from the universe</p>
-            </div>
-            
-            <GlowingCardBack onClick={handleReveal} />
-            
-            <div className="text-center space-y-2">
-              <p className="text-white/60 tracking-widest text-sm animate-pulse">Tap to reveal your card</p>
+            <div className="w-full space-y-8 text-center">
+              <div className="space-y-3">
+                <h1 className="text-[2rem] font-light tracking-[0.24em] uppercase text-white/92">
+                  Cosmic Card
+                </h1>
+                <p className="text-cosmic-muted text-[11px] tracking-[0.32em] uppercase">
+                  A quiet message for this moment
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center">
+                <GlowingCardBack onClick={handleReveal} />
+              </div>
+
+              <div className="space-y-3">
+                <p className="text-white/62 tracking-[0.22em] text-sm uppercase animate-pulse">
+                  Tap to reveal your card
+                </p>
+                <p className="mx-auto max-w-[16rem] text-sm leading-6 text-white/48">
+                  No setup, no pressure. Just one reflective message at a time.
+                </p>
+              </div>
+
+              <div className="grid w-full max-w-[13rem] mx-auto grid-cols-2 gap-3">
+                <PrimaryButton variant="secondary" className="px-3 py-2.5 text-sm" onClick={() => router.push("/history")}>
+                  <span className="flex items-center justify-center gap-2">
+                    <History className="h-4 w-4" /> History
+                  </span>
+                </PrimaryButton>
+                <PrimaryButton variant="secondary" className="px-3 py-2.5 text-sm" onClick={() => router.push("/profile")}>
+                  <span className="flex items-center justify-center gap-2">
+                    <UserRound className="h-4 w-4" /> Profile
+                  </span>
+                </PrimaryButton>
+              </div>
             </div>
           </motion.div>
         )}
@@ -165,23 +179,34 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="flex flex-col items-center w-full z-20"
+            className="flex h-full w-full flex-col items-center justify-center z-20"
           >
-            <CardContent card={card} />
+            <div className="w-full space-y-6 text-center">
+              <CardContent card={card} compact />
 
-            <div className="mt-12 flex flex-col w-full max-w-xs space-y-4">
-              <PrimaryButton onClick={() => {
-                setRevealState(0);
-                setCard(null);
-              }}>
-                Reveal Another Card
-              </PrimaryButton>
-              <PrimaryButton variant="secondary" onClick={() => router.push(`/share/${card.id}`)}>
-                Share Card
-              </PrimaryButton>
-              <PrimaryButton variant="secondary" onClick={() => router.push("/history")}>
-                View History
-              </PrimaryButton>
+              <div className="w-full max-w-xs mx-auto space-y-3">
+                <PrimaryButton
+                  onClick={() => {
+                    setRevealState(0);
+                    setCard(null);
+                    setUserCardId(null);
+                  }}
+                >
+                  Reveal Another Card
+                </PrimaryButton>
+                <div className="grid grid-cols-2 gap-3">
+                  <PrimaryButton
+                    variant="secondary"
+                    onClick={() => userCardId && router.push(`/share/${userCardId}`)}
+                    disabled={!userCardId}
+                  >
+                    Share
+                  </PrimaryButton>
+                  <PrimaryButton variant="secondary" onClick={() => router.push("/history")}>
+                    History
+                  </PrimaryButton>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

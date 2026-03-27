@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { USER_CARD_SELECT } from '@/lib/server/select-random-card';
+import { getViewerContext } from '@/lib/server/viewer';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,24 +10,44 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
+    const favoritesOnly = searchParams.get('favoritesOnly') === 'true';
+    const limitParam = Number(searchParams.get('limit') || '50');
+    const limit = Number.isFinite(limitParam)
+      ? Math.min(Math.max(limitParam, 1), 100)
+      : 50;
 
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+    const viewer = await getViewerContext(supabase, { anonymousId: userId });
+
+    if (!viewer.profileId && !viewer.anonymousDeviceId && !userId) {
+      return NextResponse.json({ error: 'User ID is required for anonymous history' }, { status: 400 });
     }
 
-    // Fetch history, ordered by newest date first
-    const { data: history, error } = await supabase
+    let query = supabase
       .from('user_cards')
-      .select('id, revealed_date, card:cards(id, title, message, affirmation, reflection)')
-      .eq('user_id', userId)
-      .order('revealed_date', { ascending: false });
+      .select(USER_CARD_SELECT)
+      .order('revealed_at', { ascending: false })
+      .limit(limit);
+
+    if (viewer.profileId) {
+      query = query.eq('profile_id', viewer.profileId);
+    } else if (viewer.anonymousDeviceId) {
+      query = query.eq('anonymous_device_id', viewer.anonymousDeviceId);
+    } else {
+      query = query.eq('user_id', userId);
+    }
+
+    if (favoritesOnly) {
+      query = query.eq('is_favorite', true);
+    }
+
+    const { data: history, error } = await query;
 
     if (error) {
       console.error('History fetch error:', error);
       return NextResponse.json({ error: 'Failed to fetch history' }, { status: 500 });
     }
 
-    return NextResponse.json({ history });
+    return NextResponse.json({ success: true, history });
 
   } catch (error) {
     console.error('History API error:', error);

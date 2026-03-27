@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:cards": "node scripts/generate-card-library.mjs",
+    "validate:cards": "node scripts/validate-card-library.mjs"
   },
   "dependencies": {
     "@serwist/next": "^9.5.6",

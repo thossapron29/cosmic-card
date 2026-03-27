@@ -1,47 +1,64 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cosmic-bg: #050117;
-  --color-cosmic-card: #0c0825;
-  --color-cosmic-text: #f0eef6;
-  --color-cosmic-accent: #d4af37;
-  --color-cosmic-muted: #8b85a3;
+  --color-cosmic-bg: #140b30;
+  --color-cosmic-card: #24184d;
+  --color-cosmic-text: #faf7ff;
+  --color-cosmic-accent: #f0ca67;
+  --color-cosmic-muted: #c2b8df;
 
-  --color-midnight-blue: #100c30;
-  --color-deep-purple: #1a103c;
+  --color-midnight-blue: #22124e;
+  --color-deep-purple: #3a2370;
+  --color-cosmic-haze: #6d55af;
   
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 @layer utilities {
   .cosmic-gradient {
-    background: radial-gradient(circle at 50% 0%, var(--color-deep-purple) 0%, var(--color-cosmic-bg) 60%);
+    background-color: var(--color-cosmic-bg);
+    background:
+      radial-gradient(circle at 50% -18%, rgba(255, 255, 255, 0.12) 0%, transparent 34%),
+      radial-gradient(circle at 22% 18%, rgba(156, 126, 226, 0.18) 0%, transparent 28%),
+      radial-gradient(circle at 78% 20%, rgba(122, 94, 201, 0.14) 0%, transparent 24%),
+      radial-gradient(circle at 50% 55%, rgba(84, 56, 158, 0.12) 0%, transparent 42%),
+      linear-gradient(180deg, #2a1860 0%, #1b103d 48%, #140b30 100%);
   }
 
   .cosmic-glow {
-    box-shadow: 0 0 40px -10px rgba(212, 175, 55, 0.15);
+    box-shadow: 0 0 48px -10px rgba(240, 202, 103, 0.24);
   }
 
   .cosmic-glow-hover:hover {
-    box-shadow: 0 0 50px -5px rgba(212, 175, 55, 0.25);
+    box-shadow: 0 0 60px -5px rgba(240, 202, 103, 0.34);
   }
 }
 
 body {
+  background: linear-gradient(180deg, #241456 0%, #140b30 100%);
   background-color: var(--color-cosmic-bg);
   color: var(--color-cosmic-text);
   overflow: hidden;
   min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  min-height: 100dvh;
   width: 100vw;
-  position: fixed;
-  inset: 0;
+  max-width: 100vw;
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  position: relative;
 }
 
 html {
+  min-height: 100%;
+  background-color: var(--color-cosmic-bg);
+  width: 100vw;
+  max-width: 100vw;
   margin: 0;
   padding: 0;
   overflow: hidden;
+}
+
+body {
+  min-height: 100%;
 }

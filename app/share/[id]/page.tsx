@@ -8,7 +8,8 @@ import { ScreenShell } from "@/components/screen-shell";
 import { ShareCardView } from "@/components/share-card-view";
 import { PrimaryButton } from "@/components/primary-button";
 import { getAnonymousId } from "@/lib/utils";
-import { ArrowLeft, Download, Share } from "lucide-react";
+import { ArrowLeft, Share } from "lucide-react";
+import { HistoryDetailResponse } from "@/types/user-card";
 
 export default function SharePage() {
   const router = useRouter();
@@ -19,20 +20,24 @@ export default function SharePage() {
   const [isExporting, setIsExporting] = useState(false);
   const shareRef = useRef<HTMLDivElement>(null);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["history", userId],
+  const { data, isLoading, error } = useQuery<HistoryDetailResponse>({
+    queryKey: ["history-detail", id, userId],
     queryFn: async () => {
-      if (!userId) return { history: [] };
-      const res = await fetch(`/api/history?userId=${userId}`);
-      if (!res.ok) throw new Error("Failed to fetch history");
-      return res.json();
+      if (!userId || !id) {
+        throw new Error("History record not found");
+      }
+
+      const res = await fetch(`/api/history/${id}?userId=${userId}`);
+      const payload = await res.json();
+      if (!res.ok) throw new Error(payload.error || "Failed to fetch history detail");
+      return payload;
     },
-    enabled: !!userId,
+    enabled: !!userId && !!id,
   });
 
   const card = useMemo(() => {
-    return data?.history?.find((h: any) => h.card?.id === id)?.card;
-  }, [data, id]);
+    return data?.item?.card ?? null;
+  }, [data]);
 
   async function handleShare() {
     if (!shareRef.current || !card) return;
@@ -59,8 +64,8 @@ export default function SharePage() {
             text: "A message from the universe.",
             files: [file],
           });
-        } catch (shareErr: any) {
-          if (shareErr.name !== "AbortError") {
+        } catch (shareErr: unknown) {
+          if (!(shareErr instanceof DOMException && shareErr.name === "AbortError")) {
             handleDownload(blob);
           }
         }
@@ -126,13 +131,13 @@ export default function SharePage() {
         ) : (
           <div className="flex flex-col items-center w-full flex-1 justify-between">
             {/* Preview container */}
-            <div className="relative w-full max-w-[280px] mx-auto shrink-0 bg-white/5 rounded-xl overflow-hidden shadow-2xl border border-white/10">
+            <div className="relative w-full max-w-[300px] mx-auto shrink-0 bg-white/5 rounded-2xl overflow-hidden shadow-2xl border border-white/10">
               <div className="w-full" style={{ aspectRatio: '9/16', position: 'relative', overflow: 'hidden' }}>
                 <div 
                   style={{ 
                     width: '600px',
                     height: '1067px',
-                    transform: `scale(${280 / 600})`,
+                    transform: `scale(${300 / 600})`,
                     transformOrigin: 'top center',
                     position: 'absolute',
                     top: 0,
@@ -147,7 +152,7 @@ export default function SharePage() {
               </div>
             </div>
 
-            <div className="flex space-x-4 w-full max-w-[280px] pt-4">
+            <div className="flex space-x-4 w-full max-w-[300px] pt-5">
               <PrimaryButton
                 onClick={handleShare}
                 className="flex-1 flex justify-center items-center gap-2 border-none"
