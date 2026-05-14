@@ -92,7 +92,7 @@ export function DrawResultScreen({
   }
 
   return (
-    <div className="relative mx-auto flex h-[100dvh] w-full max-w-[430px] flex-col overflow-hidden bg-[linear-gradient(180deg,#1c106d_0%,#3d2491_44%,#9f63d9_76%,#ffc4de_100%)] px-5 pb-[calc(env(safe-area-inset-bottom)+92px)] pt-[calc(env(safe-area-inset-top)+20px)] text-white sm:px-6">
+    <div className="relative mx-auto flex h-[100svh] w-full max-w-[430px] flex-col overflow-hidden bg-[linear-gradient(180deg,#1c106d_0%,#3d2491_44%,#9f63d9_76%,#ffc4de_100%)] px-5 pb-[calc(env(safe-area-inset-bottom)+88px)] pt-[calc(env(safe-area-inset-top)+12px)] text-white sm:px-6">
       <SparkleField dark />
 
       <header className="animate-draw-fade relative z-10 flex shrink-0 items-center justify-between">
@@ -115,30 +115,30 @@ export function DrawResultScreen({
         </div>
       </header>
 
-      <article className="animate-result-card-in relative z-10 mt-5 flex min-h-0 flex-1 flex-col overflow-hidden rounded-[36px] border-[7px] border-white bg-[#fffdfa] text-[#17203f] shadow-[0_24px_64px_rgba(18,10,69,0.28)]">
+      <article className="animate-result-card-in relative z-10 mt-4 flex min-h-0 flex-1 flex-col overflow-hidden rounded-[32px] border-[6px] border-white bg-[#fffdfa] text-[#17203f] shadow-[0_24px_64px_rgba(18,10,69,0.28)]">
         <div className="flex min-h-0 flex-1 flex-col rounded-[28px] border border-[#dccdff]">
-          <div className="px-5 pb-3 pt-6 text-center">
-            <div className="text-[1.7rem] leading-none text-[#865cff]">✦</div>
-            <span className="mt-3 inline-flex rounded-full bg-[linear-gradient(135deg,#7a52ff,#a060ff)] px-4 py-1 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[0_10px_18px_rgba(119,82,255,0.2)]">
+          <div className="px-5 pb-3 pt-5 text-center">
+            <div className="text-[1.35rem] leading-none text-[#865cff]">✦</div>
+            <span className="mt-2.5 inline-flex rounded-full bg-[linear-gradient(135deg,#7a52ff,#a060ff)] px-4 py-1 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-white shadow-[0_10px_18px_rgba(119,82,255,0.2)]">
               {reveal.card.energyType || drawMode}
             </span>
-            <h1 className="mx-auto mt-5 max-w-[18rem] font-[family:var(--font-cormorant)] text-[2.35rem] font-bold leading-none text-[#17203f]">
+            <h1 className="mx-auto mt-3.5 max-w-[17rem] font-[family:var(--font-cormorant)] text-[2rem] font-bold leading-[0.98] text-[#17203f]">
               {reveal.card.title}
             </h1>
-            <div className="mx-auto mt-5 flex max-w-[13rem] items-center gap-4 text-[#ff90bd]">
+            <div className="mx-auto mt-3.5 flex max-w-[11rem] items-center gap-4 text-[#ff90bd]">
               <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#ffadd0]" />
-              <span className="text-[1.6rem] leading-none">♡</span>
+              <span className="text-[1.35rem] leading-none">♡</span>
               <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[#ffadd0]" />
             </div>
-            <p className="mx-auto mt-4 max-w-[16rem] overflow-hidden text-[1.08rem] font-medium leading-7 text-[#273052] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
+            <p className="mx-auto mt-3 max-w-[16rem] overflow-hidden text-[0.98rem] font-medium leading-6 text-[#273052] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
               {reveal.card.shortMessage}
             </p>
           </div>
 
-          <div className="relative mx-5 h-[122px] shrink-0 overflow-hidden rounded-[26px] bg-[linear-gradient(180deg,#fff7fb_0%,#f4ddff_54%,#d7b5ff_100%)]">
+          <div className="relative mx-5 h-[92px] shrink-0 overflow-hidden rounded-[24px] bg-[linear-gradient(180deg,#fff7fb_0%,#f4ddff_54%,#d7b5ff_100%)]">
             <div className="absolute inset-x-0 bottom-0 h-20 bg-[radial-gradient(ellipse_at_bottom,#b894ff_0%,rgba(184,148,255,0)_68%)]" />
             <div className="absolute inset-x-0 bottom-0 flex justify-center">
-              <div className="relative h-[104px] w-[96px]">
+              <div className="relative h-[84px] w-[78px]">
                 <Image
                   src="/assets/cosmic/card-stack.png"
                   alt="Glowing cosmic card"
@@ -154,7 +154,7 @@ export function DrawResultScreen({
             <button
               type="button"
               onClick={handleActionDetail}
-              className="flex w-full items-center gap-4 py-4 text-left transition active:scale-[0.99]"
+              className="flex w-full items-center gap-4 py-3 text-left transition active:scale-[0.99]"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f4edff] text-lg text-[#7a52ff]">
                 ✦
@@ -173,7 +173,7 @@ export function DrawResultScreen({
             <button
               type="button"
               onClick={handleReflectionDetail}
-              className="flex w-full items-center gap-4 py-4 text-left transition active:scale-[0.99]"
+              className="flex w-full items-center gap-4 py-3 text-left transition active:scale-[0.99]"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f4edff] text-lg text-[#7a52ff]">
                 ☾
@@ -192,7 +192,7 @@ export function DrawResultScreen({
         </div>
       </article>
 
-      <div className="animate-draw-rise relative z-10 mt-5 grid shrink-0 grid-cols-[1fr_1.32fr_1fr] gap-3 [animation-delay:100ms]">
+      <div className="animate-draw-rise relative z-10 mt-3 grid shrink-0 grid-cols-[1fr_1.32fr_1fr] gap-3 [animation-delay:100ms]">
         <button
           type="button"
           onClick={handleSave}

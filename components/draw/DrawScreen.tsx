@@ -32,7 +32,7 @@ export function DrawScreen({
   onOpenSettings,
 }: DrawScreenProps) {
   return (
-    <div className="relative mx-auto flex h-[100dvh] w-full max-w-[430px] flex-col overflow-hidden bg-[linear-gradient(180deg,#fff8fc_0%,#f8ecff_54%,#f2e8ff_100%)] px-5 pb-[calc(env(safe-area-inset-bottom)+96px)] pt-[calc(env(safe-area-inset-top)+20px)] text-[#17203f] sm:px-6">
+    <div className="relative mx-auto flex h-[100svh] w-full max-w-[430px] flex-col overflow-hidden bg-[linear-gradient(180deg,#fff8fc_0%,#f8ecff_54%,#f2e8ff_100%)] px-5 pb-[calc(env(safe-area-inset-bottom)+88px)] pt-[calc(env(safe-area-inset-top)+12px)] text-[#17203f] sm:px-6">
       <SparkleField />
 
       <header className="animate-draw-fade relative z-10 flex shrink-0 items-center justify-between">
@@ -58,31 +58,31 @@ export function DrawScreen({
         </IconButton>
       </header>
 
-      <section className="animate-draw-rise relative z-10 shrink-0 pt-7 text-center">
-        <div className="text-[1.9rem] leading-none text-[#9b75ff]">✦</div>
-        <p className="mt-4 text-xs font-extrabold uppercase tracking-[0.12em] text-[#9368f4]">
+      <section className="animate-draw-rise relative z-10 shrink-0 pt-5 text-center">
+        <div className="text-[1.55rem] leading-none text-[#9b75ff]">✦</div>
+        <p className="mt-3 text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-[#9368f4]">
           Take a deep breath
         </p>
-        <p className="mx-auto mt-2 max-w-[18rem] text-[1.2rem] font-medium leading-7 text-[#17203f]">
+        <p className="mx-auto mt-2 max-w-[17rem] text-[1.04rem] font-medium leading-6 text-[#17203f]">
           Focus on your question and trust the timing.
         </p>
-        <div className="mx-auto mt-3 flex max-w-[11rem] items-center gap-4 text-[#ff9ac6]">
+        <div className="mx-auto mt-2.5 flex max-w-[9.5rem] items-center gap-4 text-[#ff9ac6]">
           <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[#ffb3d2]" />
-          <span className="text-[1.7rem] leading-none">♡</span>
+          <span className="text-[1.45rem] leading-none">♡</span>
           <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[#ffb3d2]" />
         </div>
-        <h1 className="mx-auto mt-6 max-w-[20rem] font-[family:var(--font-cormorant)] text-[2.7rem] font-bold leading-none text-[#17203f]">
+        <h1 className="mx-auto mt-4 max-w-[18rem] font-[family:var(--font-cormorant)] text-[2.12rem] font-bold leading-[0.95] text-[#17203f]">
           {DRAW_QUESTION}
           <span className="text-[#ffbf66]"> ✦</span>
         </h1>
       </section>
 
-      <div className="relative z-10 flex min-h-0 flex-1 items-center justify-center py-3">
+      <div className="relative z-10 flex min-h-0 flex-1 items-center justify-center py-2">
         <button
           type="button"
           onClick={onReveal}
           disabled={!canReveal}
-          className="animate-deck-breathe relative block h-full max-h-[330px] min-h-[230px] w-full max-w-[382px] transition duration-300 active:scale-[0.985] disabled:animate-none disabled:opacity-70"
+          className="animate-deck-breathe relative block h-full max-h-[270px] min-h-[170px] w-full max-w-[350px] transition duration-300 active:scale-[0.985] disabled:animate-none disabled:opacity-70"
           aria-label="Tap the deck to draw your card"
         >
           <Image
@@ -102,14 +102,14 @@ export function DrawScreen({
       </div>
 
       <footer className="animate-draw-rise relative z-10 shrink-0 text-center [animation-delay:120ms]">
-        <div className="text-[1.7rem] font-bold leading-none text-[#7452ef]">⌃</div>
-        <p className="mx-auto mt-3 max-w-[13rem] text-[1.12rem] font-medium leading-7 text-[#17203f]">
+        <div className="text-[1.35rem] font-bold leading-none text-[#7452ef]">⌃</div>
+        <p className="mx-auto mt-2 max-w-[13rem] text-[1rem] font-medium leading-6 text-[#17203f]">
           Tap the deck to draw your card
         </p>
         <button
           type="button"
           onClick={onOpenSettings}
-          className="mt-3 rounded-full bg-white/58 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#8b74d4] backdrop-blur-xl transition active:scale-95"
+          className="mt-2.5 rounded-full bg-white/58 px-4 py-2 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#8b74d4] backdrop-blur-xl transition active:scale-95"
         >
           {drawMode} mode
         </button>
