@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_BASE_URL =
-  process.env.COSMIC_CARD_API_URL ??
-  process.env.NEXT_PUBLIC_COSMIC_CARD_API_URL ??
-  "http://localhost:8080";
+import { getCosmicApiBaseUrl } from "@/lib/cosmic-server-config";
 
 export async function GET(request: NextRequest) {
   const locale = request.nextUrl.searchParams.get("locale") ?? "en";
-  const upstreamUrl = new URL("/api/v1/decks", API_BASE_URL);
+  const upstreamUrl = new URL("/api/v1/decks", getCosmicApiBaseUrl());
   upstreamUrl.searchParams.set("locale", locale);
 
   try {
